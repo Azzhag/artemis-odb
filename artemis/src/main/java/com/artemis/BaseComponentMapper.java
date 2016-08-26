@@ -22,21 +22,27 @@ public abstract class BaseComponentMapper<A extends Component> {
 	}
 
 	/**
-	 * Fast but unsafe retrieval of a component for this entity.
-	 * <p>
-	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
-	 * already know the entity possesses this component.
-	 * </p>
+	 * Fast retrieval of a component for this entity.
 	 *
-	 * @param e the entity that should possess the component
-	 * @return the instance of the component
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @param e the entity that should possess the component. Must be in scope of world.
+	 * @return the instance of the component, or {@code null} if none.
+	 * @throws ArrayIndexOutOfBoundsException when entity is out of scope of world.
+	 * @see #getSafe(Entity, Component)
 	 */
 	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
 		return get(e.getId());
 	}
 
+	/**
+	 * Fast retrieval of a component for this entity.
+	 *
+	 * Safe as long as the entity exists.
+	 *
+	 * @param entityId the entity id that should possess the component. Must be in scope of world.
+	 * @return the instance of the component, or {@code null} if none.
+	 * @throws ArrayIndexOutOfBoundsException when entity is out of scope of world.
+	 * @see #getSafe(int, Component)
+	 */
 	public abstract A get(int entityId) throws ArrayIndexOutOfBoundsException;
 
 	/**
@@ -44,6 +50,7 @@ public abstract class BaseComponentMapper<A extends Component> {
 	 *
 	 * @param e the entity to check
 	 * @return true if the entity has this component type, false if it doesn't
+	 * @throws ArrayIndexOutOfBoundsException when entity is out of scope of world.
 	 */
 	public boolean has(Entity e) throws ArrayIndexOutOfBoundsException {
 		return has(e.getId());
@@ -81,12 +88,13 @@ public abstract class BaseComponentMapper<A extends Component> {
 	public abstract A internalCreate(int entityId);
 
 	/**
-	 * Fast and safe retrieval of a component for this entity.
+	 * Retrieval of a component for this entity with fallback value.
 	 * If the entity does not have this component then fallback is returned.
 	 *
-	 * @param entityId Entity that should possess the component
+	 * @param entityId Entity that should possess the component. Must be in scope of world.
 	 * @param fallback fallback component to return, or {@code null} to return null.
 	 * @return the instance of the component
+	 * @throws ArrayIndexOutOfBoundsException when entity is out of scope of world.
 	 */
 	public A getSafe(int entityId, A fallback) {
 		final A c = get(entityId);
@@ -125,12 +133,13 @@ public abstract class BaseComponentMapper<A extends Component> {
 	}
 
 	/**
-	 * Fast and safe retrieval of a component for this entity.
+	 * Retrieval of a component for this entity with fallback value.
 	 * If the entity does not have this component then fallback is returned.
 	 *
-	 * @param entity   Entity that should possess the component
+	 * @param entity   Entity that should possess the component. Must be in scope of world.
 	 * @param fallback fallback component to return, or {@code null} to return null.
 	 * @return the instance of the component
+	 * @throws ArrayIndexOutOfBoundsException when entity is out of scope of world.
 	 */
 	public A getSafe(Entity entity, A fallback) {
 		return getSafe(entity.getId(), fallback);

@@ -43,16 +43,14 @@ public class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
 	}
 
 	/**
-	 * Fast but unsafe retrieval of a component for this entity.
-	 * <p>
-	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
-	 * already know the entity possesses this component.
-	 * </p>
+	 * Fast retrieval of a component for this entity.
 	 *
-	 * @param entityId the entity that should possess the component
-	 * @return the instance of the component
-	 * @throws ArrayIndexOutOfBoundsException
+	 * Safe as long as the entity exists.
+	 *
+	 * @param entityId the entity id that should possess the component. Must be in scope of world.
+	 * @return the instance of the component, or {@code null} if none.
+	 * @throws ArrayIndexOutOfBoundsException when entity is out of scope of world.
+	 * @see #getSafe(int, Component)
 	 */
 	@Override
 	public A get(int entityId) throws ArrayIndexOutOfBoundsException {
@@ -64,6 +62,7 @@ public class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
 	 *
 	 * @param entityId the id of entity to check
 	 * @return true if the entity has this component type, false if it doesn't
+	 * @throws ArrayIndexOutOfBoundsException when entity is out of scope of world.
 	 */
 	@Override
 	public boolean has(int entityId) {
