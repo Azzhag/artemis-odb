@@ -196,6 +196,35 @@ public class ComponentMapperTest {
 		createAndProcessWorld(new TestSystem());
 	}
 
+	@Test
+	public void get_missing_component_should_return_null() {
+
+		@Wire(injectInherited = true)
+		class TestSystem extends BasicSystem {
+			@Override
+			protected void process(Entity e) {
+				Assert.assertNull(mPos.get(e));
+			}
+		}
+		createAndProcessWorld(new TestSystem());
+	}
+
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void get_component_out_of_scope_entity_should_explode() {
+
+		@Wire(injectInherited = true)
+		class TestSystem extends BasicSystem {
+
+			public static final int INVALID_ENTITY_ID = 999;
+
+			@Override
+			protected void process(Entity e) {
+				Assert.assertNull(mPos.get(INVALID_ENTITY_ID));
+			}
+		}
+		createAndProcessWorld(new TestSystem());
+	}
+
 	protected void createAndProcessWorld(BaseSystem system) {
 		final World world = new World(new WorldConfiguration().setSystem(system));
 		world.createEntity().edit().create(TestMarker.class);
